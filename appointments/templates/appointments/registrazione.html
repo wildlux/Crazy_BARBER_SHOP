@@ -1,0 +1,61 @@
+{% extends 'appointments/base.html' %}
+
+{% block title %}Registrazione{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h1 style="color: #667eea; margin-bottom: 30px;">📝 Registrazione</h1>
+    
+    <!-- FORM POST per registrarsi -->
+    <form method="POST" action="{% url 'registrazione' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label>Nome Completo:</label>
+            {{ form.nome }}
+            {% if form.nome.errors %}
+                <p style="color: red;">{{ form.nome.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <p style="color: red;">{{ form.email.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Telefono:</label>
+            {{ form.telefono }}
+            {% if form.telefono.errors %}
+                <p style="color: red;">{{ form.telefono.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Password:</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <p style="color: red;">{{ form.password.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Conferma Password:</label>
+            {{ form.conferma_password }}
+            {% if form.conferma_password.errors %}
+                <p style="color: red;">{{ form.conferma_password.errors }}</p>
+            {% endif %}
+        </div>
+        
+        {% if form.non_field_errors %}
+            <p style="color: red;">{{ form.non_field_errors }}</p>
+        {% endif %}
+        
+        <button type="submit" class="btn btn-primary">Registrati</button>
+        <a href="{% url 'login' %}" style="margin-left: 10px;">Hai già un account? Accedi</a>
+    </form>
+</div>
+{% endblock %}
