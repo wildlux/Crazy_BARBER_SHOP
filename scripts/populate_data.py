@@ -21,6 +21,57 @@ clienti_data = [
     {'nome': 'Sara Gialli', 'email': 'sara.gialli@example.com', 'telefono': '+39 328 456 7890'},
 ]
 
+# Dati di esempio per servizi
+servizi_data = [
+    {
+        'nome': 'Taglio Capelli',
+        'descrizione': 'Taglio professionale dei capelli con styling finale',
+        'durata_minuti': 30,
+        'prezzo': 20.00
+    },
+    {
+        'nome': 'Shampoo',
+        'descrizione': 'Lavaggio e trattamento shampoo con massaggio',
+        'durata_minuti': 15,
+        'prezzo': 10.00
+    },
+    {
+        'nome': 'Taglio + Shampoo',
+        'descrizione': 'Combinazione di taglio e shampoo per un servizio completo',
+        'durata_minuti': 45,
+        'prezzo': 25.00
+    },
+    {
+        'nome': 'Barba',
+        'descrizione': 'Modellatura e rifinitura della barba',
+        'durata_minuti': 20,
+        'prezzo': 15.00
+    },
+    {
+        'nome': 'Taglio + Barba',
+        'descrizione': 'Taglio capelli e modellatura barba',
+        'durata_minuti': 50,
+        'prezzo': 30.00
+    },
+    {
+        'nome': 'Pacchetto Completo',
+        'descrizione': 'Taglio, shampoo, barba e styling finale',
+        'durata_minuti': 75,
+        'prezzo': 45.00
+    }
+]
+
+# Crea servizi
+for data in servizi_data:
+    servizio, created = Servizio.objects.get_or_create(
+        nome=data['nome'],
+        defaults=data
+    )
+    if created:
+        print(f"Aggiunto servizio: {servizio.nome}")
+    else:
+        print(f"Servizio già esistente: {servizio.nome}")
+
 # Dati di esempio per barbieri
 barbieri_data = [
     {'nome': 'Giuseppe Barbiere', 'specialita': 'Tagli classici e moderni', 'foto': None, 'attivo': True},
@@ -61,6 +112,27 @@ for barbiere_data in barbieri_data:
     )
     if created:
         print(f"Aggiunto barbiere: {barbiere.nome}")
+
+# Mappatura nome barbiere -> foto
+photo_mapping = {
+    'Giuseppe Barbiere': 'barber_shop/foto/giuseppe_il_barbiere.png',
+    'Antonio Stilista': 'barber_shop/foto/Salvone_il_barbiere.png',
+    'Marco Esperto': 'barber_shop/foto/marco.png',
+    'Davide Giovane': 'barber_shop/foto/davide_giovane.png',
+}
+
+# Aggiorna foto per barbieri esistenti
+for barbiere in Barbiere.objects.all():
+    if barbiere.nome in photo_mapping:
+        foto_path = photo_mapping[barbiere.nome]
+        if os.path.exists(foto_path):
+            with open(foto_path, 'rb') as f:
+                barbiere.foto.save(os.path.basename(foto_path), f, save=True)
+                print(f"Aggiornata foto per {barbiere.nome}: {foto_path}")
+        else:
+            print(f"Foto non trovata per {barbiere.nome}: {foto_path}")
+    else:
+        print(f"Nessuna mappatura foto per {barbiere.nome}")
 
 # Crea alcuni appuntamenti di esempio (se ci sono servizi)
 servizi = list(Servizio.objects.all())
